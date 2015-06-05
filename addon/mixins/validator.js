@@ -25,7 +25,7 @@ export default Ember.Mixin.create({
 	 * @return {Validator}
 	 */
 	validatorsFor: function(meta) {
-		var validations = Ember.get(meta, 'validations');
+		var validations = Ember.get(meta, 'validation');
 
 		if (Ember.isEmpty(validations)) {
 			return [];
@@ -49,36 +49,76 @@ export default Ember.Mixin.create({
 		});
 
 		return validators.map(function(validator) {
-			return lookupValidator(this.continer, validator);
+			return lookupValidator(this.container, validator);
 		}, this);
 	},
 
-	validateAttribute: function(attribute, model) {
+	/**
+	 * Validate a single Attribute.
+	 *
+	 * If the Attribute has defined validation, it would try to resolve
+	 * the the required Validators and run validation.
+	 *
+	 * For each failed validation, error message is added to the Errors
+	 * object for it's attribute name.
+	 *
+	 * @param  {Attribute} attribute
+	 * @private
+	 */
+	_validateAttribute: function(attribute) {
 		var validators = this.validatorsFor(attribute.options),
 			name = attribute.name;
 
-		var errors = model.get('errors');
+		var errors = this.get('errors');
 
 		validators.forEach(function(validator) {
-			var result = validator.validate(attribute, model.get(name), model);
+			var result = validator.validate(attribute, this.get(name), this);
 
 			if(typeof result === 'string') {
 				errors.add(name, result);
 			}
-		});
+		}, this);
 	},
 
-	serializeIntoHash: function(hash, typeClass, snapshot, options) {
-		this._super(hash, typeClass, snapshot, options);
+	/**
+	 * Validates the Model.
+	 *
+	 * If the Model is valid, this method would return `true`.
+	 *
+	 * If the validation fails, Model Errors would be populated
+	 * by validation errors and it would transition into an invalid
+	 * state.
+	 *
+	 * @return {Boolean}
+	 */
+	validate: function() {
+		var errors = this.get('errors'),
+			store = this.get('store');
 
-		typeClass.eachAttribute(function(key, attribute) {
-			this.validateAttribute(attribute, typeClass);
+
+		errors.clear();
+
+		this.eachAttribute(function(key, attribute) {
+			Ember.run(this, '_validateAttribute', attribute);
 		}, this);
 
-		var errors = Ember.get(typeClass, 'errors');
+		var isValid = Ember.get(errors, 'isEmpty');
 
-		if(!Ember.get(errors, 'isEmpty')) {
-			throw errors;
+		if(!isValid) {
+			this.transitionTo('updated.uncommitted');
+        	store.recordWasInvalid(this, errors);
 		}
+
+		return isValid;
 	},
+
+	save: function() {
+		var isValid = this.validate();
+
+		if(isValid) {
+			return this._super();
+		}
+
+		return Ember.RSVP.reject(this.get('errors'));
+	}
 });
