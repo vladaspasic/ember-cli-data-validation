@@ -12,7 +12,7 @@ function lookupValidator(continer, obj) {
 		value = {};
 	}
 
-	return validatorClass.create(obj.value);
+	return validatorClass.create(value);
 }
 
 /**
