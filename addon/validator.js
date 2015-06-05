@@ -77,12 +77,12 @@ export default Ember.Object.extend({
 	 * @param  {DS.Model}  model     Model instance
 	 * @return {String}
 	 */
-	formatAttributeLabel: function(attribute, attribute/*, model*/) {
+	formatAttributeLabel: function(name, attribute/*, model*/) {
 		if (Ember.isPresent(attribute.options.label)) {
 			return attribute.options.label;
 		}
 
-		return attribute.replace(/(?:^\w|[A-Z]|\b\w)/g, function(match, index) {
+		return name.replace(/(?:^\w|[A-Z]|\b\w)/g, function(match, index) {
 			return index === 0 ? match.toUpperCase() : ' ' + match.toLowerCase();
 		}).replace(/_/g, ' ');
 	}
