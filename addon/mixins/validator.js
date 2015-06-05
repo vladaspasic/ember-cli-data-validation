@@ -1,9 +1,10 @@
 import Ember from 'ember';
 
 function lookupValidator(continer, obj) {
-	var validatorClass = continer.lookupFactory('validator:' + obj.type);
+	var validatorClass = continer.lookupFactory('validator:' + obj.type) ||
+		continer.lookupFactory('ember-cli-data-validation@validator:' + obj.type);
 
-	Ember.assert('Could not find Validator `' + obj.type + '`.', Ember.canInvoke(validatorClass));
+	Ember.assert('Could not find Validator `' + obj.type + '`.', typeof validatorClass === 'function');
 
 	return validatorClass.create(obj.value);
 }
