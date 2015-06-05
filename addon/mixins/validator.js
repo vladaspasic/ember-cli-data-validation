@@ -6,6 +6,12 @@ function lookupValidator(continer, obj) {
 
 	Ember.assert('Could not find Validator `' + obj.type + '`.', typeof validatorClass === 'function');
 
+	var value = obj.value;
+
+	if(typeof value !== 'object') {
+		value = {};
+	}
+
 	return validatorClass.create(obj.value);
 }
 
@@ -73,7 +79,7 @@ export default Ember.Mixin.create({
 		var errors = this.get('errors');
 
 		validators.forEach(function(validator) {
-			var result = validator.validate(attribute, this.get(name), this);
+			var result = validator.validate(name, this.get(name), attribute, this);
 
 			if(typeof result === 'string') {
 				errors.add(name, result);
