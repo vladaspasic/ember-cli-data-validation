@@ -58,7 +58,7 @@ export default Ember.Object.extend({
 
 		args.unshift(message);
 
-		return Ember.String.fmt.apply(args);
+		return Ember.String.fmt.apply(null, args);
 	},
 
 	/**
