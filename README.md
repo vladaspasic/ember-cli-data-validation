@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/vladaspasic/ember-cli-data-validation.svg?branch=master)](https://travis-ci.org/vladaspasic/ember-cli-data-validation)
+
 # Ember-cli-data-validation
 
 This README outlines the details of collaborating on this Ember addon.
