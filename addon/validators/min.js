@@ -23,17 +23,16 @@ export default Validator.extend({
 		var type = attribute.type,
 			minValue = this.get('min');
 
-		Ember.assert('You must define a `min` for RangeValidator', Ember.isPresent(minValue));
+		Ember.assert('You must define a `min` for MinValidator', Ember.isPresent(minValue));
 
-		var invalid = false;
+		var invalid = true;
 
-		if (type === 'number' && value < minValue) {
-			invalid = true;
-		} else if (type === 'string' && value.length < minValue) {
-			invalid = true;
-		} else {
-			// it is invalid cause it should be a number or a string
-			invalid = true;
+		if(type === 'string') {
+			value = value && value.length || 0;
+		}
+
+		if (value && (type === 'number' || type === 'string')) {
+			invalid = value < minValue;
 		}
 
 		if(invalid) {

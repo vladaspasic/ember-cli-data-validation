@@ -23,17 +23,16 @@ export default Validator.extend({
 		var type = attribute.type,
 			maxValue = this.get('max');
 
-		Ember.assert('You must define a `max` for RangeValidator', Ember.isPresent(maxValue));
+		Ember.assert('You must define a `max` for MaxValidator', Ember.isPresent(maxValue));
 
-		var invalid = false;
+		var invalid = true;
 
-		if (type === 'number' && value > maxValue) {
-			invalid = true;
-		} else if (type === 'string' && value.length > maxValue) {
-			invalid = true;
-		} else {
-			// it is invalid cause it should be a number or a string
-			invalid = true;
+		if(type === 'string') {
+			value = value && value.length || 0;
+		}
+
+		if (value && (type === 'number' || type === 'string')) {
+			invalid = value > maxValue;
 		}
 
 		if(invalid) {

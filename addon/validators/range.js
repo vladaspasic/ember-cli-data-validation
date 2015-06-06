@@ -39,19 +39,14 @@ export default Validator.extend({
 		Ember.assert('You must define a `from` for RangeValidator', Ember.isPresent(fromValue));
 		Ember.assert('You must define a `to` for RangeValidator', Ember.isPresent(toValue));
 
-		var invalid = false;
+		var invalid = true;
 
-		if (type === 'string') {
-			value = value.length || 0;
+		if(type === 'string') {
+			value = value && value.length || 0;
 		}
 
-		if (type === 'number' && (value < fromValue || value > toValue)) {
-			invalid = true;
-		} else if (type === 'string' && (value < fromValue || value > toValue)) {
-			invalid = true;
-		} else {
-			// it is invalid cause it should be a number or a string
-			invalid = true;
+		if (value && (type === 'number' || type === 'string')) {
+			invalid = value < fromValue || value > toValue;
 		}
 
 		if(invalid) {

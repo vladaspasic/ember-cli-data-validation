@@ -8,5 +8,5 @@ import PatternValidator from 'ember-cli-data-validation/pattern-validator';
  * @extends {PatternValidator}
  */
 export default PatternValidator.extend({
-  pattern: new RegExp('/^\d+$/,')
+  pattern: /^\d+$/
 });

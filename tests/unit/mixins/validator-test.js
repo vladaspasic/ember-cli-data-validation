@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import ValidatorMixin from '../../../mixins/validator';
+import ValidatorMixin from 'ember-cli-data-validation/mixins/validator';
 import { module, test } from 'qunit';
 
 module('Unit | Mixin | validator');
