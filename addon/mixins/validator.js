@@ -16,7 +16,7 @@ function lookupValidator(continer, obj) {
 }
 
 /**
- * Validator Mixin to be used on Serializers.
+ * Validator Mixin to be used on a DS.Model.
  *
  * Exposes the validation functionality for Ember Models.
  *

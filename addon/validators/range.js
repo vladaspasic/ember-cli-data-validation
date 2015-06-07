@@ -11,6 +11,7 @@ import Validator from 'ember-cli-data-validation/validator';
  * @extends {Validator}
  */
 export default Validator.extend({
+	message: '%@ must be between %@ and %@',
 	/**
 	 * Number representing the starting point
 	 * of the range validation.

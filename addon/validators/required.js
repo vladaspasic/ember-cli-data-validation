@@ -8,6 +8,7 @@ import Validator from 'ember-cli-data-validation/validator';
  * @extends {Validator}
  */
 export default Validator.extend({
+  	message: '%@ is required.',
 	validate: function(name, value, attribute, model) {
 		if(!Ember.isPresent(value) || Ember.isEmpty(value)) {
 			var label = this.formatAttributeLabel(name, attribute, model);

@@ -10,6 +10,8 @@ import Validator from 'ember-cli-data-validation/validator';
  * @extends {Validator}
  */
 export default Validator.extend({
+	message: '%@ must not be lesser/shorter than %@',
+
 	/**
 	 * Min value for the validator.
 	 *

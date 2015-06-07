@@ -1,0 +1,12 @@
+{
+  "name": "ember-cli-data-validation",
+  "description": "Ember Data Model validation support.",
+  "version": "0.0.1",
+  "options": {
+    "paths": [
+      "addon"
+    ],
+    "exclude": "vendor",
+    "outdir": "docs"
+  }
+}

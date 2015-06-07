@@ -10,6 +10,8 @@ import Validator from 'ember-cli-data-validation/validator';
  * @extends {Validator}
  */
 export default Validator.extend({
+
+	message: '%@ must not be longer/bigger than %@',
 	/**
 	 * Max value for the validator.
 	 *
