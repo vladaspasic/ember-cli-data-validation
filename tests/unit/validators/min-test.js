@@ -4,13 +4,15 @@ import Validator from 'ember-cli-data-validation/validators/min';
 module('Min Validator test');
 
 test('test missing min value', function() {
-	var validator = Validator.create();
-
 	var attribute = {
 		type: 'string',
 		options: {},
 		name: 'email'
 	};
+
+	var validator = Validator.create({
+		attribute: attribute
+	});
 
 	throws(function() {
 		validator.validate('email', 'value', attribute);
@@ -20,16 +22,17 @@ test('test missing min value', function() {
 });
 
 test('validate string', function() {
-	var validator = Validator.create({
-		message: '%@ must not be shorter than %@',
-		min: 3
-	});
-
 	var attribute = {
 		type: 'string',
 		options: {},
 		name: 'email'
 	};
+
+	var validator = Validator.create({
+		attribute: attribute,
+		message: '%@ must not be shorter than %@',
+		min: 3
+	});
 
 	deepEqual(validator.validate('email', 'testing value', attribute, {}), undefined);
 	deepEqual(validator.validate('email', 'vlada', attribute, {}), undefined);
@@ -42,16 +45,17 @@ test('validate string', function() {
 });
 
 test('validate number', function() {
-	var validator = Validator.create({
-		message: '%@ must not be lesser than %@',
-		min: 5
-	});
-
 	var attribute = {
 		type: 'number',
 		options: {},
 		name: 'rating'
 	};
+
+	var validator = Validator.create({
+		attribute: attribute,
+		message: '%@ must not be lesser than %@',
+		min: 5
+	});
 
 	deepEqual(validator.validate('rating', '6', attribute, {}), undefined);
 	deepEqual(validator.validate('rating', 8, attribute, {}), undefined);

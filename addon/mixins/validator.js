@@ -1,16 +1,28 @@
 import Ember from 'ember';
 
-function lookupValidator(continer, obj) {
-	var validatorClass = continer.lookupFactory('validator:' + obj.type) ||
-		continer.lookupFactory('ember-cli-data-validation@validator:' + obj.type);
+function lookupValidator(container, obj) {
+	var typeKey = obj.type;
 
-	Ember.assert('Could not find Validator `' + obj.type + '`.', typeof validatorClass === 'function');
+	var validatorClass = container.lookupFactory('validator:' + typeKey) ||
+		container.lookupFactory('ember-cli-data-validation@validator:' + typeKey);
+
+	Ember.assert('Could not find Validator `' + typeKey + '`.', typeof validatorClass === 'function');
+
+	var messageResolver = container.lookup('resolver:validation-message') ||
+		container.lookupFactory('ember-cli-data-validation@resolver:validation-message');
 
 	var value = obj.value;
 
 	if(typeof value !== 'object') {
 		value = {};
 	}
+
+	Ember.merge(value, {
+		attribute: obj.attribute,
+		messageResolver: messageResolver
+	});
+
+	validatorClass.typeKey = Ember.String.camelize(typeKey);
 
 	return validatorClass.create(value);
 }
@@ -28,10 +40,11 @@ export default Ember.Mixin.create({
 	 * Resolves the List of Validators for a given attribute.
 	 *
 	 * @method validatorsFor
-	 * @param  {Object}    meta
+	 * @param  {Attribute}  attribute
 	 * @return {Validator}
 	 */
-	validatorsFor: function(meta) {
+	validatorsFor: function(attribute) {
+		var meta = attribute.options;
 		var validations = Ember.get(meta, 'validation');
 
 		if (Ember.isEmpty(validations)) {
@@ -50,7 +63,8 @@ export default Ember.Mixin.create({
 			keys.forEach(function(name) {
 				validators.push({
 					type: name,
-					value: validation[name]
+					value: validation[name],
+					attribute: attribute
 				});
 			});
 		});
@@ -73,7 +87,7 @@ export default Ember.Mixin.create({
 	 * @private
 	 */
 	_validateAttribute: function(attribute) {
-		var validators = this.validatorsFor(attribute.options),
+		var validators = this.validatorsFor(attribute),
 			name = attribute.name;
 
 		var errors = this.get('errors');

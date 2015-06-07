@@ -1,14 +1,15 @@
 import Ember from 'ember';
 import Validator from 'ember-cli-data-validation/validators/email';
 
-var validator = Validator.create({
-	message: '%@ must be a valid email'
-});
-
 var attribute = {
 	options: {},
 	name: 'email'
 };
+
+var validator = Validator.create({
+	message: '%@ must be a valid email',
+	attribute: attribute
+});
 
 module('Email Validator test');
 

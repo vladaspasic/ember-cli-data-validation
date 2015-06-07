@@ -23,15 +23,13 @@ export default Validator.extend({
 	 */
 	pattern: null,
 
-	validate: function(name, value, attribute, model) {
+	validate: function(name, value /*, attribute, model*/) {
 		var pattern = this.get('pattern');
 
 		Ember.assert('You must define a RegExp pattern in order to validate.', pattern instanceof RegExp);
 
 		if (!Ember.isPresent(value) || !value.toString().match(pattern)) {
-			var label = this.formatAttributeLabel(name, attribute, model);
-
-			return this.format(label);
+			return this.format();
 		}
 	},
 });

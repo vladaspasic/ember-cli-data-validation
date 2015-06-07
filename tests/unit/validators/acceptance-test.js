@@ -1,14 +1,15 @@
 import Ember from 'ember';
 import Validator from 'ember-cli-data-validation/validators/acceptance';
 
-var validator = Validator.create({
-	message: '%@ must be checked'
-});
-
 var attribute = {
 	options: {},
 	name: 'check'
 };
+
+var validator = Validator.create({
+	message: '%@ must be checked',
+	attribute: attribute
+});
 
 module('Acceptance Validator test');
 

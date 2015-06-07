@@ -1,14 +1,15 @@
 import Ember from 'ember';
 import Validator from 'ember-cli-data-validation/validators/url';
 
-var validator = Validator.create({
-	message: '%@ must be a valid URL'
-});
-
 var attribute = {
 	options: {},
 	name: 'url'
 };
+
+var validator = Validator.create({
+	message: '%@ must be a valid URL',
+	attribute: attribute
+});
 
 module('url Validator test');
 

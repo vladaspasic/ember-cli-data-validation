@@ -4,13 +4,15 @@ import Validator from 'ember-cli-data-validation/validators/range';
 module('Range Validator test');
 
 test('test missing from value', function() {
-	var validator = Validator.create();
-
 	var attribute = {
 		type: 'string',
 		options: {},
 		name: 'email'
 	};
+
+	var validator = Validator.create({
+		attribute
+	});
 
 	throws(function() {
 		validator.validate('email', 'value', attribute);
@@ -20,15 +22,16 @@ test('test missing from value', function() {
 });
 
 test('test missing to value', function() {
-	var validator = Validator.create({
-		from: 1
-	});
-
 	var attribute = {
 		type: 'string',
 		options: {},
 		name: 'email'
 	};
+
+	var validator = Validator.create({
+		from: 1,
+		attribute: attribute
+	});
 
 	throws(function() {
 		validator.validate('email', 'value', attribute);
@@ -38,17 +41,18 @@ test('test missing to value', function() {
 });
 
 test('validate string', function() {
-	var validator = Validator.create({
-		message: '%@ must not be smaller than %@ and bigger than %@',
-		from: 3,
-		to: 10
-	});
-
 	var attribute = {
 		type: 'string',
 		options: {},
 		name: 'email'
 	};
+
+	var validator = Validator.create({
+		message: '%@ must not be smaller than %@ and bigger than %@',
+		from: 3,
+		to: 10,
+		attribute: attribute
+	});
 
 	deepEqual(validator.validate('email', 'vladimir', attribute, {}), undefined);
 	deepEqual(validator.validate('email', 'vlada', attribute, {}), undefined);
@@ -63,17 +67,18 @@ test('validate string', function() {
 });
 
 test('validate number', function() {
-	var validator = Validator.create({
-		message: '%@ must not be smaller than %@ and bigger than %@',
-		from: 3,
-		to: 10
-	});
-
 	var attribute = {
 		type: 'number',
 		options: {},
 		name: 'attribute'
 	};
+
+	var validator = Validator.create({
+		message: '%@ must not be smaller than %@ and bigger than %@',
+		from: 3,
+		to: 10,
+		attribute: attribute
+	});
 
 	deepEqual(validator.validate('attribute', '3', attribute, {}), undefined);
 	deepEqual(validator.validate('attribute', '9', attribute, {}), undefined);

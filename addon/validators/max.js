@@ -11,7 +11,6 @@ import Validator from 'ember-cli-data-validation/validator';
  */
 export default Validator.extend({
 
-	message: '%@ must not be longer/bigger than %@',
 	/**
 	 * Max value for the validator.
 	 *
@@ -21,26 +20,42 @@ export default Validator.extend({
 	 */
 	max: null,
 
-	validate: function(name, value, attribute, model) {
+	validate: function(name, value, attribute) {
 		var type = attribute.type,
 			maxValue = this.get('max');
 
 		Ember.assert('You must define a `max` for MaxValidator', Ember.isPresent(maxValue));
 
+		var validatorName = 'validate' + Ember.String.classify(type);
+
 		var invalid = true;
 
-		if(type === 'string') {
-			value = value && value.length || 0;
-		}
-
-		if (value && (type === 'number' || type === 'string')) {
-			invalid = value > maxValue;
+		if(Ember.canInvoke(this, validatorName)) {
+			invalid = Ember.run(this, validatorName, value, maxValue);
 		}
 
 		if(invalid) {
-			var label = this.formatAttributeLabel(name, attribute, model);
-
-			return this.format(label, maxValue);
+			return this.format(maxValue);
 		}
+	},
+
+	validateString: function(value, max) {
+		if(typeof value !== 'string') {
+			return true;
+		}
+
+		var length = value && value.length || 0;
+
+		return length > max;
+	},
+
+	validateNumber: function(value, max) {
+		value = parseInt(value, 10);
+
+		if(isNaN(value)) {
+			return true;
+		}
+
+		return value > max;
 	}
 });

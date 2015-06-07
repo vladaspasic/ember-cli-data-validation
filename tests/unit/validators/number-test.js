@@ -1,14 +1,15 @@
 import Ember from 'ember';
 import Validator from 'ember-cli-data-validation/validators/number';
 
-var validator = Validator.create({
-	message: '%@ must be a number'
-});
-
 var attribute = {
 	options: {},
 	name: 'stars'
 };
+
+var validator = Validator.create({
+	message: '%@ must be a number',
+	attribute: attribute
+});
 
 module('Number Validator test');
 

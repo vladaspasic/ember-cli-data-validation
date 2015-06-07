@@ -1,14 +1,15 @@
 import Ember from 'ember';
 import Validator from 'ember-cli-data-validation/validators/digit';
 
-var validator = Validator.create({
-	message: '%@ must be a digit'
-});
-
 var attribute = {
 	options: {},
 	name: 'Digit'
 };
+
+var validator = Validator.create({
+	message: '%@ must be a digit',
+	attribute: attribute
+});
 
 module('Digit Validator test');
 

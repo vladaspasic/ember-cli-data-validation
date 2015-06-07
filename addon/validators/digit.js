@@ -8,6 +8,5 @@ import PatternValidator from 'ember-cli-data-validation/pattern-validator';
  * @extends {PatternValidator}
  */
 export default PatternValidator.extend({
-  message: '%@ must be a Digit',
   pattern: /^\d+$/
 });

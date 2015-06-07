@@ -11,7 +11,6 @@ import Validator from 'ember-cli-data-validation/validator';
  * @extends {Validator}
  */
 export default Validator.extend({
-	message: '%@ must be between %@ and %@',
 	/**
 	 * Number representing the starting point
 	 * of the range validation.
@@ -32,7 +31,7 @@ export default Validator.extend({
 	 */
 	to: null,
 
-	validate: function(name, value, attribute, model) {
+	validate: function(name, value, attribute) {
 		var type = attribute.type,
 			fromValue = this.get('from'),
 			toValue = this.get('to');
@@ -40,20 +39,36 @@ export default Validator.extend({
 		Ember.assert('You must define a `from` for RangeValidator', Ember.isPresent(fromValue));
 		Ember.assert('You must define a `to` for RangeValidator', Ember.isPresent(toValue));
 
+		var validatorName = 'validate' + Ember.String.classify(type);
+
 		var invalid = true;
 
-		if(type === 'string') {
-			value = value && value.length || 0;
-		}
-
-		if (value && (type === 'number' || type === 'string')) {
-			invalid = value < fromValue || value > toValue;
+		if(Ember.canInvoke(this, validatorName)) {
+			invalid = Ember.run(this, validatorName, value, fromValue, toValue);
 		}
 
 		if(invalid) {
-			var label = this.formatAttributeLabel(name, attribute, model);
-
-			return this.format(label, fromValue, toValue);
+			return this.format(fromValue, toValue);
 		}
+	},
+
+	validateString: function(value, fromValue, toValue) {
+		if(typeof value !== 'string') {
+			return true;
+		}
+
+		var length = value && value.length || 0;
+
+		return length < fromValue || length > toValue;
+	},
+
+	validateNumber: function(value, fromValue, toValue) {
+		value = parseInt(value, 10);
+
+		if(isNaN(value)) {
+			return true;
+		}
+
+		return value < fromValue || value > toValue;
 	}
 });

@@ -12,13 +12,9 @@ function isBoolean(obj) {
  * @extends {Validator}
  */
 export default Validator.extend({
-	message: '%@ must be checked',
-
-	validate: function(name, value, attribute, model) {
+	validate: function(name, value) {
 		if (value !== 'true' && (!isBoolean(value) || value === false)) {
-			var label = this.formatAttributeLabel(name, attribute, model);
-
-			return this.format(label);
+			return this.format();
 		}
 	}
 });

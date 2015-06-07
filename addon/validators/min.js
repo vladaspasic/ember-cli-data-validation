@@ -10,8 +10,6 @@ import Validator from 'ember-cli-data-validation/validator';
  * @extends {Validator}
  */
 export default Validator.extend({
-	message: '%@ must not be lesser/shorter than %@',
-
 	/**
 	 * Min value for the validator.
 	 *
@@ -21,26 +19,42 @@ export default Validator.extend({
 	 */
 	min: null,
 
-	validate: function(name, value, attribute, model) {
+	validate: function(name, value, attribute) {
 		var type = attribute.type,
 			minValue = this.get('min');
 
 		Ember.assert('You must define a `min` for MinValidator', Ember.isPresent(minValue));
 
+		var validatorName = 'validate' + Ember.String.classify(type);
+
 		var invalid = true;
 
-		if(type === 'string') {
-			value = value && value.length || 0;
-		}
-
-		if (value && (type === 'number' || type === 'string')) {
-			invalid = value < minValue;
+		if(Ember.canInvoke(this, validatorName)) {
+			invalid = Ember.run(this, validatorName, value, minValue);
 		}
 
 		if(invalid) {
-			var label = this.formatAttributeLabel(name, attribute, model);
-
-			return this.format(label, minValue);
+			return this.format(minValue);
 		}
+	},
+
+	validateString: function(value, min) {
+		if(typeof value !== 'string') {
+			return true;
+		}
+
+		var length = value && value.length || 0;
+
+		return length < min;
+	},
+
+	validateNumber: function(value, min) {
+		value = parseInt(value, 10);
+
+		if(isNaN(value)) {
+			return true;
+		}
+
+		return value < min;
 	}
 });
