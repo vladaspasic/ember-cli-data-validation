@@ -9,7 +9,7 @@ function lookupValidator(container, obj) {
 	Ember.assert('Could not find Validator `' + typeKey + '`.', typeof validatorClass === 'function');
 
 	var messageResolver = container.lookup('resolver:validation-message') ||
-		container.lookupFactory('ember-cli-data-validation@resolver:validation-message');
+		container.lookup('ember-cli-data-validation@resolver:validation-message');
 
 	var value = obj.value;
 
