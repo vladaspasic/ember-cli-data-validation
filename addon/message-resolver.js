@@ -47,7 +47,7 @@ export default Ember.Object.extend({
 	 * then try to find with just the Validator type, in this
 	 * case it would be just `required`.
 	 *
-	 *
+	 * @method resolve
 	 * @param  {Validator} validator
 	 * @param  {Attribute} attribute
 	 * @return {String}
@@ -86,6 +86,7 @@ export default Ember.Object.extend({
 	 * This would be the best place to implement your own lookup
 	 * logic.
 	 *
+	 * @method resolveMessage
 	 * @param  {String} key The validation Message key
 	 * @return {String}
 	 */
@@ -96,6 +97,7 @@ export default Ember.Object.extend({
 	/**
 	 * Used to format the lookup paramters.
 	 *
+	 * @method parseName
 	 * @param  {Validator} validator
 	 * @param  {Attribute} attribute
 	 * @return {String}
@@ -117,6 +119,7 @@ export default Ember.Object.extend({
 	 * This is normaly located in the Validators constructor
 	 * method property `typeKey`.
 	 *
+	 * @method parseValidatorType
 	 * @param  {Validator} validator
 	 * @return {String}
 	 */
@@ -133,11 +136,21 @@ export default Ember.Object.extend({
 	 * 		name: DS.attr('string') // type is string
 	 * 	})
 	 *
+	 * @method parseAttributeType
 	 * @param  {Attribute} attribute
 	 * @return {String}
 	 */
 	parseAttributeType: function(attribute) {
 		return attribute.type;
+	},
+
+	/**
+	 * Clears the Message cache
+	 *
+	 * @method clearCache
+	 */
+	clearCache: function() {
+		this._cache = dictionary(null);
 	}
 
 });
