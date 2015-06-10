@@ -1,5 +1,8 @@
 import Ember from 'ember';
 import Validator from 'ember-cli-data-validation/validator';
+import {
+	hasValue
+} from 'ember-cli-data-validation/utils';
 
 /**
  * Validator that could be used to validate maximum length,
@@ -25,6 +28,10 @@ export default Validator.extend({
 			maxValue = this.get('max');
 
 		Ember.assert('You must define a `max` for MaxValidator', Ember.isPresent(maxValue));
+
+		if(!hasValue(value)) {
+			return;
+		}
 
 		var validatorName = 'validate' + Ember.String.classify(type);
 

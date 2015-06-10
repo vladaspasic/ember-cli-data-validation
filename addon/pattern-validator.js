@@ -1,5 +1,8 @@
 import Ember from 'ember';
 import Validator from 'ember-cli-data-validation/validator';
+import {
+	hasValue
+} from 'ember-cli-data-validation/utils';
 
 /**
  * Validator that uses a RegExp pattern to test
@@ -28,7 +31,7 @@ export default Validator.extend({
 
 		Ember.assert('You must define a RegExp pattern in order to validate.', pattern instanceof RegExp);
 
-		if (!Ember.isPresent(value) || !value.toString().match(pattern)) {
+		if (hasValue(value) && !value.toString().match(pattern)) {
 			return this.format();
 		}
 	},

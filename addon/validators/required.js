@@ -1,6 +1,7 @@
-import Ember from 'ember';
 import Validator from 'ember-cli-data-validation/validator';
-
+import {
+	hasValue
+} from 'ember-cli-data-validation/utils';
 /**
  * Validator that checks if the value is set.
  *
@@ -9,7 +10,7 @@ import Validator from 'ember-cli-data-validation/validator';
  */
 export default Validator.extend({
 	validate: function(name, value) {
-		if(!Ember.isPresent(value) || Ember.isEmpty(value)) {
+		if(!hasValue(value)) {
 			return this.format();
 		}
 	}

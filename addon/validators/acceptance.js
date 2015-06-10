@@ -1,8 +1,7 @@
 import Validator from 'ember-cli-data-validation/validator';
-
-function isBoolean(obj) {
-    return obj === true || obj === false || Object.prototype.toString.call(obj) === '[object Boolean]';
-}
+import {
+	isBoolean
+} from 'ember-cli-data-validation/utils';
 
 /**
  * Acceptance Validator used to validate boolean like

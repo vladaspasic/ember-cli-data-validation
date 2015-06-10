@@ -18,8 +18,11 @@ test('validate', function() {
 	deepEqual(validator.validate('digit', 9, attribute, {}), undefined);
 	deepEqual(validator.validate('digit', '12345', attribute, {}), undefined);
 
-	deepEqual(validator.validate('digit', null, attribute, {}), 'Digit must be a digit');
+	// Should not validate empty values
+	deepEqual(validator.validate('digit', null, attribute, {}), undefined);
+	deepEqual(validator.validate('digit', undefined, attribute, {}), undefined);
+	deepEqual(validator.validate('digit', '', attribute, {}), undefined);
+
 	deepEqual(validator.validate('digit', false, attribute, {}), 'Digit must be a digit');
-	deepEqual(validator.validate('digit', undefined, attribute, {}), 'Digit must be a digit');
 	deepEqual(validator.validate('digit', 'some value', attribute, {}), 'Digit must be a digit');
 });

@@ -20,9 +20,12 @@ test('validate', function() {
 	deepEqual(validator.validate('stars', '12345', attribute, {}), undefined);
 	deepEqual(validator.validate('stars', '78.98', attribute, {}), undefined);
 
+	// Should not validate empty values
+	deepEqual(validator.validate('url', undefined, attribute, {}), undefined);
+	deepEqual(validator.validate('url', null, attribute, {}), undefined);
+	deepEqual(validator.validate('url', '', attribute, {}), undefined);
+
 	deepEqual(validator.validate('stars', '78.98,00', attribute, {}), 'Stars must be a number');
-	deepEqual(validator.validate('stars', null, attribute, {}), 'Stars must be a number');
 	deepEqual(validator.validate('stars', false, attribute, {}), 'Stars must be a number');
-	deepEqual(validator.validate('stars', undefined, attribute, {}), 'Stars must be a number');
 	deepEqual(validator.validate('stars', 'some value', attribute, {}), 'Stars must be a number');
 });
