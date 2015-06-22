@@ -126,8 +126,10 @@ export default Ember.Mixin.create({
 		var isValid = Ember.get(errors, 'isEmpty');
 
 		if(!isValid) {
-			this.transitionTo('updated.uncommitted');
-        	store.recordWasInvalid(this, errors);
+			var state = this.get('currentState');
+			state.becameInvalid(this);
+
+			store.recordWasInvalid(this, errors);
 		}
 
 		return isValid;
