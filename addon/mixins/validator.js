@@ -113,25 +113,14 @@ export default Ember.Mixin.create({
 	 * @return {Boolean}
 	 */
 	validate: function() {
-		var errors = this.get('errors'),
-			store = this.get('store');
-
-
+		var errors = this.get('errors');
 		errors.clear();
 
 		this.eachAttribute(function(key, attribute) {
 			Ember.run(this, '_validateAttribute', attribute);
 		}, this);
 
-		var isValid = Ember.get(errors, 'isEmpty');
-
-		if (!isValid) {
-			store.recordWasInvalid(this, errors);
-			this.transitionTo('invalid');
-			this.triggerLater('becameInvalid', this);
-		}
-
-		return isValid;
+		return Ember.get(errors, 'isEmpty');
 	},
 
 	save: function() {
