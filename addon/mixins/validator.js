@@ -13,7 +13,7 @@ function lookupValidator(container, obj) {
 
 	var value = obj.value;
 
-	if(typeof value !== 'object') {
+	if (typeof value !== 'object') {
 		value = {};
 	}
 
@@ -95,7 +95,7 @@ export default Ember.Mixin.create({
 		validators.forEach(function(validator) {
 			var result = validator.validate(name, this.get(name), attribute, this);
 
-			if(typeof result === 'string') {
+			if (typeof result === 'string') {
 				errors.add(name, result);
 			}
 		}, this);
@@ -125,11 +125,10 @@ export default Ember.Mixin.create({
 
 		var isValid = Ember.get(errors, 'isEmpty');
 
-		if(!isValid) {
-			var state = this.get('currentState');
-			state.becameInvalid(this);
-
+		if (!isValid) {
 			store.recordWasInvalid(this, errors);
+			this.transitionTo('invalid');
+			this.triggerLater('becameInvalid', this);
 		}
 
 		return isValid;
@@ -138,7 +137,7 @@ export default Ember.Mixin.create({
 	save: function() {
 		var isValid = this.validate();
 
-		if(isValid) {
+		if (isValid) {
 			return this._super();
 		}
 
