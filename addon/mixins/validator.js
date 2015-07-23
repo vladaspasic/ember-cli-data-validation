@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import DS from 'ember-data';
 
 function lookupValidator(container, obj) {
 	var typeKey = obj.type;
@@ -113,6 +114,11 @@ export default Ember.Mixin.create({
 	 * @return {Boolean}
 	 */
 	validate: function() {
+		// Do not validate the records which are deleted
+		if (this.get('isDeleted')) {
+			return true;
+		}
+
 		var errors = this.get('errors');
 		errors.clear();
 
@@ -130,6 +136,6 @@ export default Ember.Mixin.create({
 			return this._super();
 		}
 
-		return Ember.RSVP.reject(this.get('errors'));
+		return Ember.RSVP.reject(new DS.InvalidError());
 	}
 });
