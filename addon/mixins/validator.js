@@ -16,6 +16,8 @@ function lookupValidator(container, obj) {
 
 	if (typeof value !== 'object') {
 		value = {};
+
+		value[obj.type] = obj.value;
 	}
 
 	Ember.merge(value, {
