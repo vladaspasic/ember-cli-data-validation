@@ -22,7 +22,7 @@ export default Ember.Object.extend({
 	message: Ember.computed('attribute', function() {
 		var attribute = this.get('attribute');
 
-		return this.messageResolver.resolve(this.constructor, attribute);
+		return this.messageResolver.resolve(this, attribute);
 	}),
 
 	/**

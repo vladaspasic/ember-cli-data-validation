@@ -89,23 +89,23 @@ test('should throw missing message', function(assert) {
 
 test('should resolve right validator key', function(assert) {
 
-	deepEqual(resolver.parseValidatorType({
+	deepEqual(resolver._parseValidatorType({
 		typeKey: 'required'
 	}), 'required');
 
-	deepEqual(resolver.parseValidatorType({
+	deepEqual(resolver._parseValidatorType({
 		constructor: {
 			typeKey: 'required'
 		}
 	}), 'required');
 
-	deepEqual(resolver.parseValidatorType({}), '');
+	deepEqual(resolver._parseValidatorType({}), '');
 });
 
 
 test('should resolve right attribute key', function(assert) {
 
-	deepEqual(resolver.parseAttributeType({
+	deepEqual(resolver._parseAttributeType({
 		type: 'string'
 	}), 'string');
 });
@@ -115,10 +115,14 @@ test('should parseName', function(assert) {
 	var parsedName = resolver.parseName({
 		typeKey: 'required'
 	}, {
-		type: "string"
+		type: 'string',
+		name: 'attribute',
+		parentTypeKey: 'model'
 	});
 
 	deepEqual(parsedName.attributeType, 'string');
 	deepEqual(parsedName.validatorType, 'required');
-	deepEqual(parsedName.fullName, 'required.string');
+	deepEqual(parsedName.modelType, 'model');
+	deepEqual(parsedName.validatorPath, 'required.string');
+	deepEqual(parsedName.modelPath, 'model.attribute.required');
 });

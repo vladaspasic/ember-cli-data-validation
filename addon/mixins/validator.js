@@ -1,5 +1,24 @@
 import Ember from 'ember';
-import DS from 'ember-data';
+import ValidationError from '../error';
+import defaultMessages from '../messages';
+
+function createValidationError(model) {
+	var messageResolver = lookupMessageResolver(model.container);
+
+	var message = messageResolver.resolveMessage('error'),
+		errors = model.get('errors');
+
+	if(Ember.isEmpty(message)) {
+		message = Ember.get(defaultMessages, 'error');
+	}
+
+	return new ValidationError(message, errors);
+}
+
+function lookupMessageResolver(container) {
+	return container.lookup('resolver:validation-message') ||
+		container.lookup('ember-cli-data-validation@resolver:validation-message');
+}
 
 function lookupValidator(container, obj) {
 	var typeKey = obj.type;
@@ -9,9 +28,7 @@ function lookupValidator(container, obj) {
 
 	Ember.assert('Could not find Validator `' + typeKey + '`.', typeof validatorClass === 'function');
 
-	var messageResolver = container.lookup('resolver:validation-message') ||
-		container.lookup('ember-cli-data-validation@resolver:validation-message');
-
+	var messageResolver = lookupMessageResolver(container);
 	var value = obj.value;
 
 	if (typeof value !== 'object') {
@@ -93,6 +110,10 @@ export default Ember.Mixin.create({
 		var validators = this.validatorsFor(attribute),
 			name = attribute.name;
 
+		// Assign the Model name to the Attribute
+		attribute.parentTypeKey = this.constructor.modelName ||
+			this.constructor.typeKey;
+
 		var errors = this.get('errors');
 
 		validators.forEach(function(validator) {
@@ -138,6 +159,6 @@ export default Ember.Mixin.create({
 			return this._super();
 		}
 
-		return Ember.RSVP.reject(new DS.InvalidError());
+		return Ember.RSVP.reject(createValidationError(this));
 	}
 });

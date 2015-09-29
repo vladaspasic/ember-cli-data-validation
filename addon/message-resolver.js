@@ -54,7 +54,7 @@ export default Ember.Object.extend({
 	 */
 	resolve: function(validator, attribute) {
 		var parsedName = this.parseName(validator, attribute);
-		var lookupKeys = ['fullName', 'validatorType'];
+		var lookupKeys = ['modelPath', 'validatorPath', 'validatorType'];
 
 		var message;
 
@@ -103,14 +103,29 @@ export default Ember.Object.extend({
 	 * @return {String}
 	 */
 	parseName: function(validator, attribute) {
-		var attributeType = this.parseAttributeType(attribute),
-			validatorType = this.parseValidatorType(validator);
+		var attributeType = this._parseAttributeType(attribute),
+			modelType = this._parseModelType(attribute),
+			validatorType = this._parseValidatorType(validator);
 
 		return {
-			attributeType: attributeType,
-			validatorType: validatorType,
-			fullName: validatorType + '.' + attributeType
+			attributeType,
+			validatorType,
+			modelType,
+			validatorPath: validatorType + '.' + attributeType,
+			modelPath: modelType + '.' + attribute.name + '.' + validatorType
 		};
+	},
+
+	/**
+	 * Resolve the Model name from the attribute.
+	 *
+	 * @private
+	 * @method _parseModelType
+	 * @param  {Attribute} attribute
+	 * @return {String}
+	 */
+	_parseModelType: function(attribute) {
+		return attribute.parentTypeKey;
 	},
 
 	/**
@@ -119,11 +134,12 @@ export default Ember.Object.extend({
 	 * This is normaly located in the Validators constructor
 	 * method property `typeKey`.
 	 *
-	 * @method parseValidatorType
+	 * @private
+	 * @method _parseValidatorType
 	 * @param  {Validator} validator
 	 * @return {String}
 	 */
-	parseValidatorType: function(validator) {
+	_parseValidatorType: function(validator) {
 		return validator.typeKey ||
 			validator.constructor && validator.constructor.typeKey || '';
 	},
@@ -136,11 +152,12 @@ export default Ember.Object.extend({
 	 * 		name: DS.attr('string') // type is string
 	 * 	})
 	 *
-	 * @method parseAttributeType
+	 * @private
+	 * @method _parseAttributeType
 	 * @param  {Attribute} attribute
 	 * @return {String}
 	 */
-	parseAttributeType: function(attribute) {
+	_parseAttributeType: function(attribute) {
 		return attribute.type;
 	},
 

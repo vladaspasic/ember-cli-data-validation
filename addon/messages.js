@@ -1,4 +1,5 @@
 export default {
+	error: 'Some required information is missing or incomplete. Please correct your entries and try again.',
 	acceptance: '%@ must be checked',
 	digit: '%@ must be a digit',
 	number: '%@ must be a number',
@@ -17,5 +18,12 @@ export default {
 		string: '%@ must be between %@ and %@ characters',
 		number: '%@ must be between %@ and %@'
 	},
-	pattern: '%@ is invalid'
+	pattern: '%@ is invalid',
+
+	test: {
+		name: {
+			range: 'Tesint tange',
+			min: 'MINNNNNN'
+		}
+	}
 };
