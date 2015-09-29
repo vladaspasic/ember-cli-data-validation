@@ -55,7 +55,7 @@ export DS.Model.extend(ValidatorMixin, {
 });
 ```
 
-Validation of the Model is executed in the `save` method of the Model. If the validation fails, promise is rejected with `DS.Errors` Object.
+Validation of the Model is executed in the `save` method of the Model. If the validation fails, promise is rejected with `ValidationError` that contains the `DS.Errors` object.
 You can also manually call the `validate` method directly on the Model, if the Model is valid, this would return `true` otherwise `false`.
 
 ## Validators
@@ -138,25 +138,94 @@ You can also do this manualy, but keep in mind that all validators must be eithe
 
 ## Message Resolver
 
-This addon comes with built in validation error messages. You may wish to change this.
+This addon comes with a `MessageResolver` that resolves an error message for a failed attribute validation. By default, this addon uses built in validation error messages. You may wish to change them and your own error messages for your application.
 
-The simplest way to that is by overiding the `resolveMessage` method in the `MessageResolver`. You can place your implementation in the `resolvers` folder, register the Resolver in the container manually with key `resolver:validation-message` or just simply reopen the class.
+The simplest way to do that is by overiding the `resolveMessage` method in the `MessageResolver`. You can place your implementation in the `resolvers` folder, this way it would be automatically picked up by the Ember Resolver. You can register the Resolver in the container manually with key `resolver:validation-message` or just simply reopen the class.
 
 ##### How Message Resolver works
 
-Message Resolver would first try to find a Message with a formated key which consitst of the Validator type and Attrbite type. So if you have the following settings for you attribute validation:
+When a validation of the attribute fails, `Validator` creates an error message by invoking the `MessageResolver.resolve` method. This method will create an object that contains couple of message keys. These keys are used to locate the error message from the configured message catalog.
+
+For instance if we have a Model with 2 attributes, declared like this in your `models/user.js` file:
 
 ```javascript
-    DS.Model.extend({
-        name: DS.attr('string', {
-            validation: {
-                required: true
-            }
-        })
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    name: DS.attr('string', {
+        validation: {
+            required: true
+        }
+    }),
+    age: DS.attr('number', {
+        validation: {
+            required: true,
+            min: 18
+        }
     })
+});
 ```
 
-The key would be `required.string`, if the message for that key is not found, then the `resolveMessage` method would be invoked again with the `required` key.
+And we have created our own implementation of the `MessageResolver` that we placed in the `resolvers/message-resolver.js` file. Here we are going to declare our own catalog of error messages.
+
+```javascript
+import MessageResolver from 'ember-cli-data-validation/message-resolver';
+
+export default MessageResolver.extend({
+    catalog: Ember.computed(function() {
+        return {
+            'required': 'Field %@ is required',
+            'min.string': 'String must have more than %@ characters',
+            'user': {
+                'age': {
+                    'min': 'You must have more than 18 years to register.'
+                }
+            }
+        };
+    }),
+    resolveMessage: function(key) {
+        var catalog = this.get('catalog');
+
+        return Ember.get(catalog, key);
+    }
+});
+```
+
+When the `MessageResolver.resolve` method is invoked for the `name` attribute from the `required` validator, Resolver would create this set of keys for which it will search the catalog:
+
+```javascript
+{
+  attributeType: 'string',
+  validatorType: 'required',
+  modelType: 'user',
+  validatorPath: 'required.string',
+  modelPath: 'user.name.required'
+}
+```
+
+Once the keys are generated, the `MessageResolver.resolve` method would first invoke the `resolveMessage` method with the `modelPath` value. If the message does not exists, it would try again to find a message with a `validatorPath` value. If the message is still not resolved, it tries again with the `validatorType` value or it would throw an Assertion Error.
+
+So when the validation fails for the `name` attribute with `required` Validator, the `resolveMessage` would be invoked with the `modelPath` value, which is `user.name.required`. This key does not exists in our catalog, so the resolver will try again with the `validatorPath` value, which is `required.string`. This will again fail to resolve the message, as this key does not exists. Next iteration would be with the `validatorType` value. This key exists, and the `Field %@ is required` would be returned.
+
+In the case when the `min` Validator fails for the `age` attribute, `MessageResolver` would generate these keys:
+
+```javascript
+{
+  attributeType: 'number',
+  validatorType: 'age',
+  modelType: 'user',
+  validatorPath: 'min.number',
+  modelPath: 'user.age.min'
+}
+```
+
+The error message for this case, would be resolved to `You must have more than 18 years to register`.
+
+Once the message is found, it is stored in the cache for the current looked up key.
+
+`MessageResolver` also resolves the message for the `ValidationError` that is thrown when the validation fails when calling `DS.Model.save` method. The key used for this message is `error`.
+
+You can also register the messages in the container, and they can be fetched from there and used inside the `MessageResolver`.
 
 ```javascript
 import MessageResolver from 'ember-cli-data-validation/message-resolver';
@@ -187,8 +256,8 @@ export default MessageResolver.extend({
     catalog: Ember.computed('locale', function() {
         return this.container.lookup('locale:' + this.get('locale'));
     }),
-    clearCache: Ember.observer('locale', function() {
-        this._cache = {};
+    localeDidChange: Ember.observer('locale', function() {
+        this.clearCache();
     }),
     resolveMessage: function(key) {
         var catalog = this.get('catalog');
