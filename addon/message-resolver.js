@@ -18,8 +18,8 @@ function dictionary() {
  * To implement your own message lookup, you just
  * need to redefine this class.
  *
- * @class  ValidationMessageResolver
- * @extends {Ember.Resolver}
+ * @class  MessageResolver
+ * @extends {Ember.Object}
  */
 export default Ember.Object.extend({
 

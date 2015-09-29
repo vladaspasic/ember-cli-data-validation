@@ -103,6 +103,7 @@ export default Ember.Mixin.create({
 	 * For each failed validation, error message is added to the Errors
 	 * object for it's attribute name.
 	 *
+	 * @method _validateAttribute
 	 * @param  {Attribute} attribute
 	 * @private
 	 */
@@ -134,6 +135,7 @@ export default Ember.Mixin.create({
 	 * by validation errors and it would transition into an invalid
 	 * state.
 	 *
+	 * @method validate
 	 * @return {Boolean}
 	 */
 	validate: function() {
