@@ -1,7 +1,7 @@
 import Validator from 'ember-cli-data-validation/validator';
 
 export default Validator.extend({
-  validate: function(attribute, value, meta, model) {
+  validate: function(name, value, attribute, model) {
     // add your custom validation
   }
 });
