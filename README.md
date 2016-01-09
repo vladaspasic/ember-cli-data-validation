@@ -61,21 +61,21 @@ You can also manually call the `validate` method directly on the Model, if the M
 ## Validators
 This addon comes with couple of built in `Validators`:
 
-* RequiredValidator
-* AcceptanceValidator
-* DigitValidator
-* DateValidator
-* DateBeforeValidator
-* DateAfterValidator
-* EmailValidator
-* InValidator (EnumValidator)
-* MaxValidator
-* MinValidator
-* NumberValidator
-* RangeValidator
-* URLValidator
-* UUIDValidator
-* PatternValidator
+* [RequiredValidator](#RequiredValidator)
+* [AcceptanceValidator](#AcceptanceValidator)
+* [DigitValidator](#DigitValidator)
+* [DateValidator](#DateValidator)
+* [DateBeforeValidator](#DateBeforeValidator)
+* [DateAfterValidator](#DateAfterValidator)
+* [EmailValidator](#EmailValidator)
+* [InValidator (EnumValidator)](#InValidator)
+* [MaxValidator](#MaxValidator)
+* [MinValidator](#MinValidator)
+* [NumberValidator](#NumberValidator)
+* [RangeValidator](#RangeValidator)
+* [URLValidator](#URLValidator)
+* [UUIDValidator](#UUIDValidator)
+* [PatternValidator](#PatternValidator)
 
 You can also create your own custom `Validators` by using the provided blueprint.
 
@@ -269,6 +269,288 @@ export default MessageResolver.extend({
 
         return Ember.get(catalog, key);
     }
+});
+```
+
+## Validators
+
+Examples on how to use validators.
+
+### RequiredValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    name: DS.attr('string', {
+        validation: {
+            required: true
+        }
+    })
+});
+
+```
+
+### AcceptanceValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    published: DS.attr('boolean', {
+        validation: {
+            acceptance: true
+        }
+    })
+});
+
+```
+
+### DigitValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    age: DS.attr('number', {
+        validation: {
+            digit: true
+        }
+    })
+});
+
+```
+
+### DateValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    dateOfBirth: DS.attr('date', {
+        validation: {
+            date: true
+        }
+    })
+});
+
+```
+
+### DateBeforeValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    dateOfBirth: DS.attr('date', {
+        validation: {
+            before: new Date()
+        }
+    })
+});
+
+```
+
+Or with a function
+
+```javascript
+import moment from 'moment';
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    dateOfBirth: DS.attr('date', {
+        validation: {
+            before: function() {
+                return moment().startOf('d').toDate();
+            }
+        }
+    })
+});
+
+```
+
+### DateAfterValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    dateOfBirth: DS.attr('date', {
+        validation: {
+            after: new Date()
+        }
+    })
+});
+
+```
+
+Or with a function
+
+```javascript
+import moment from 'moment';
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    dateOfBirth: DS.attr('date', {
+        validation: {
+            after: function() {
+                return moment().startOf('d').toDate();
+            }
+        }
+    })
+});
+
+```
+
+### EmailValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    email: DS.attr('string', {
+        validation: {
+            email: true
+        }
+    })
+});
+```
+
+### InValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    property: DS.attr('string', {
+        validation: {
+            in: {
+                values: ['foo', 'bar']
+            }
+        }
+    })
+});
+```
+
+### MaxValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    age: DS.attr('number', {
+        validation: {
+            max: 18
+        }
+    })
+});
+```
+
+### MinValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    age: DS.attr('number', {
+        validation: {
+            min: 18
+        }
+    })
+});
+```
+
+### NumberValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    age: DS.attr('number', {
+        validation: {
+            number: true
+        }
+    })
+});
+```
+
+### RangeValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    age: DS.attr('number', {
+        validation: {
+            range: {
+                from: 0,
+                to: 18
+            }
+        }
+    })
+});
+```
+
+Or with a String length
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    password: DS.attr('string', {
+        validation: {
+            range: {
+                from: 8,
+                to: 12
+            }
+        }
+    })
+});
+```
+
+### URLValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    website: DS.attr('string', {
+        validation: {
+            url: true
+        }
+    })
+});
+```
+
+### UUIDValidator
+
+Here you can pass `all`, `3`, `4` or `5` as a `version` property value. If `all` is passed it validates the 1 and 2 UUID verions.
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    uuid: DS.attr('string', {
+        validation: {
+            uuid: {
+                version: 3
+            }
+        }
+    })
+});
+```
+
+### PatternValidator
+
+```javascript
+import DS from 'ember-data';
+
+export default DS.Model.extend({
+    pattern: DS.attr('string', {
+        validation: {
+            pattern: 'some regex rule'
+        }
+    })
 });
 ```
 
