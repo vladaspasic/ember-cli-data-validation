@@ -276,7 +276,7 @@ export default MessageResolver.extend({
 
 Examples on how to use validators.
 
-### RequiredValidator
+#### RequiredValidator
 
 ```javascript
 import DS from 'ember-data';
@@ -291,7 +291,7 @@ export default DS.Model.extend({
 
 ```
 
-### AcceptanceValidator
+#### AcceptanceValidator
 
 ```javascript
 import DS from 'ember-data';
@@ -306,7 +306,7 @@ export default DS.Model.extend({
 
 ```
 
-### DigitValidator
+#### DigitValidator
 
 ```javascript
 import DS from 'ember-data';
@@ -321,7 +321,7 @@ export default DS.Model.extend({
 
 ```
 
-### DateValidator
+#### DateValidator
 
 ```javascript
 import DS from 'ember-data';
@@ -336,7 +336,7 @@ export default DS.Model.extend({
 
 ```
 
-### DateBeforeValidator
+#### DateBeforeValidator
 
 ```javascript
 import DS from 'ember-data';
@@ -369,7 +369,7 @@ export default DS.Model.extend({
 
 ```
 
-### DateAfterValidator
+#### DateAfterValidator
 
 ```javascript
 import DS from 'ember-data';
@@ -402,7 +402,7 @@ export default DS.Model.extend({
 
 ```
 
-### EmailValidator
+#### EmailValidator
 
 ```javascript
 import DS from 'ember-data';
@@ -416,7 +416,7 @@ export default DS.Model.extend({
 });
 ```
 
-### InValidator
+#### InValidator
 
 ```javascript
 import DS from 'ember-data';
@@ -432,7 +432,7 @@ export default DS.Model.extend({
 });
 ```
 
-### MaxValidator
+#### MaxValidator
 
 ```javascript
 import DS from 'ember-data';
@@ -446,7 +446,7 @@ export default DS.Model.extend({
 });
 ```
 
-### MinValidator
+#### MinValidator
 
 ```javascript
 import DS from 'ember-data';
@@ -460,7 +460,7 @@ export default DS.Model.extend({
 });
 ```
 
-### NumberValidator
+#### NumberValidator
 
 ```javascript
 import DS from 'ember-data';
@@ -474,7 +474,7 @@ export default DS.Model.extend({
 });
 ```
 
-### RangeValidator
+#### RangeValidator
 
 ```javascript
 import DS from 'ember-data';
@@ -508,7 +508,7 @@ export default DS.Model.extend({
 });
 ```
 
-### URLValidator
+#### URLValidator
 
 ```javascript
 import DS from 'ember-data';
@@ -522,7 +522,7 @@ export default DS.Model.extend({
 });
 ```
 
-### UUIDValidator
+#### UUIDValidator
 
 Here you can pass `all`, `3`, `4` or `5` as a `version` property value. If `all` is passed it validates the 1 and 2 UUID verions.
 
@@ -540,7 +540,7 @@ export default DS.Model.extend({
 });
 ```
 
-### PatternValidator
+#### PatternValidator
 
 ```javascript
 import DS from 'ember-data';
