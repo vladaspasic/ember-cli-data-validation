@@ -5,6 +5,8 @@ export default Ember.Controller.extend({
 		save: function() {
 			var model = this.get('model');
 
+			console.log(model);
+
 			model.save().catch(function(e) {
 				console.error(e.stack);
 			});

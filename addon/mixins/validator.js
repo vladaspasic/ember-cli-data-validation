@@ -78,7 +78,7 @@ export default Ember.Mixin.create({
 		var validators = [];
 
 		validations.forEach(function(validation) {
-			var keys = Ember.keys(validation);
+			var keys = Object.keys(validation);
 
 			keys.forEach(function(name) {
 				validators.push({
@@ -144,8 +144,10 @@ export default Ember.Mixin.create({
 			return true;
 		}
 
+		// Move the Model into `inFlight` state
+		this.send('willCommit');
+
 		var errors = this.get('errors');
-		errors.clear();
 
 		this.eachAttribute(function(key, attribute) {
 			Ember.run(this, '_validateAttribute', attribute);
@@ -155,9 +157,7 @@ export default Ember.Mixin.create({
 	},
 
 	save: function() {
-		var isValid = this.validate();
-
-		if (isValid) {
+		if (this.validate()) {
 			return this._super();
 		}
 

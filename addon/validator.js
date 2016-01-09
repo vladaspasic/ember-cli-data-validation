@@ -1,5 +1,25 @@
 import Ember from 'ember';
 
+// Implement Ember.String.fmt function, to avoid depreciation warnings
+function format(str, formats) {
+	var cachedFormats = formats;
+
+	if (!Ember.isArray(cachedFormats) || arguments.length > 2) {
+		cachedFormats = new Array(arguments.length - 1);
+
+		for (var i = 1, l = arguments.length; i < l; i++) {
+			cachedFormats[i - 1] = arguments[i];
+		}
+	}
+
+	var idx = 0;
+	return str.replace(/%@([0-9]+)?/g, function(s, argIndex) {
+		argIndex = (argIndex) ? parseInt(argIndex, 10) - 1 : idx++;
+		s = cachedFormats[argIndex];
+		return (s === null) ? '(null)' : (s === undefined) ? '' : Ember.inspect(s);
+	});
+}
+
 /**
  * Validator Class used to perform specific Attribute
  * Validation.
@@ -67,7 +87,7 @@ export default Ember.Object.extend({
 	 * @param  {DS.Model}  model     Model instance
 	 * @return {String|Boolean}
 	 */
-	validate: function(/*attribute, value, meta, model*/) {
+	validate: function( /*attribute, value, meta, model*/ ) {
 		throw new Ember.Error('You must implement `validate` method on your Validator.');
 	},
 
@@ -91,7 +111,7 @@ export default Ember.Object.extend({
 		args.unshift(label);
 		args.unshift(message);
 
-		return Ember.String.fmt.apply(null, args);
+		return format.apply(null, args);
 	}
 
 });

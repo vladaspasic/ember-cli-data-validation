@@ -64,12 +64,17 @@ This addon comes with couple of built in `Validators`:
 * RequiredValidator
 * AcceptanceValidator
 * DigitValidator
+* DateValidator
+* DateBeforeValidator
+* DateAfterValidator
 * EmailValidator
+* InValidator (EnumValidator)
 * MaxValidator
 * MinValidator
 * NumberValidator
 * RangeValidator
 * URLValidator
+* UUIDValidator
 * PatternValidator
 
 You can also create your own custom `Validators` by using the provided blueprint.
