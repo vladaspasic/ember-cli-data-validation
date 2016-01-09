@@ -61,21 +61,21 @@ You can also manually call the `validate` method directly on the Model, if the M
 ## Validators
 This addon comes with couple of built in `Validators`:
 
-* [RequiredValidator](#RequiredValidator)
-* [AcceptanceValidator](#AcceptanceValidator)
-* [DigitValidator](#DigitValidator)
-* [DateValidator](#DateValidator)
-* [DateBeforeValidator](#DateBeforeValidator)
-* [DateAfterValidator](#DateAfterValidator)
-* [EmailValidator](#EmailValidator)
-* [InValidator (EnumValidator)](#InValidator)
-* [MaxValidator](#MaxValidator)
-* [MinValidator](#MinValidator)
-* [NumberValidator](#NumberValidator)
-* [RangeValidator](#RangeValidator)
-* [URLValidator](#URLValidator)
-* [UUIDValidator](#UUIDValidator)
-* [PatternValidator](#PatternValidator)
+* [RequiredValidator](#requiredvalidator)
+* [AcceptanceValidator](#acceptancevalidator)
+* [DigitValidator](#digitvalidator)
+* [DateValidator](#datevalidator)
+* [DateBeforeValidator](#datebeforevalidator)
+* [DateAfterValidator](#dateaftervalidator)
+* [EmailValidator](#emailvalidator)
+* [InValidator (EnumValidator)](#invalidator)
+* [MaxValidator](#maxvalidator)
+* [MinValidator](#minvalidator)
+* [NumberValidator](#numbervalidator)
+* [RangeValidator](#rangevalidator)
+* [URLValidator](#urlvalidator)
+* [UUIDValidator](#uuidvalidator)
+* [PatternValidator](#patternvalidator)
 
 You can also create your own custom `Validators` by using the provided blueprint.
 
