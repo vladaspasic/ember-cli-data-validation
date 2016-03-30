@@ -175,7 +175,15 @@ export default Ember.Mixin.create({
 			Ember.run(this, '_validateAttribute', attribute);
 		});
 
-		return Ember.get(errors, 'isEmpty');
+		const isValid = Ember.get(errors, 'isEmpty');
+
+		if(!isValid) {
+		  // From Ember Data 2.3.* it is required to manually trigger
+		  // `bacameInvalid` event in order to change the model state.
+			errors.trigger('becameInvalid');
+		}
+
+		return isValid;
 	},
 
 	save: function() {
