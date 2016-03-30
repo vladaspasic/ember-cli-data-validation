@@ -27,7 +27,7 @@ export default Validator.extend({
 	pattern: null,
 
 	validate: function(name, value /*, attribute, model*/) {
-		var pattern = this.get('pattern');
+		const pattern = this.get('pattern');
 
 		Ember.assert('You must define a RegExp pattern in order to validate.', pattern instanceof RegExp);
 

@@ -2,17 +2,17 @@ import Ember from 'ember';
 
 // Implement Ember.String.fmt function, to avoid depreciation warnings
 function format(str, formats) {
-	var cachedFormats = formats;
+	let cachedFormats = formats;
 
 	if (!Ember.isArray(cachedFormats) || arguments.length > 2) {
 		cachedFormats = new Array(arguments.length - 1);
 
-		for (var i = 1, l = arguments.length; i < l; i++) {
+		for (let i = 1, l = arguments.length; i < l; i++) {
 			cachedFormats[i - 1] = arguments[i];
 		}
 	}
 
-	var idx = 0;
+	let idx = 0;
 	return str.replace(/%@([0-9]+)?/g, function(s, argIndex) {
 		argIndex = (argIndex) ? parseInt(argIndex, 10) - 1 : idx++;
 		s = cachedFormats[argIndex];
@@ -40,7 +40,7 @@ export default Ember.Object.extend({
 	 * @type String
 	 */
 	message: Ember.computed('attribute', function() {
-		var attribute = this.get('attribute');
+		const attribute = this.get('attribute');
 
 		return this.messageResolver.resolve(this, attribute);
 	}),
@@ -49,25 +49,16 @@ export default Ember.Object.extend({
 	 * Returns a label format of the attribute name
 	 * to make it more readable for the user.
 	 *
-	 * If a `label` property is available in the Attribute description,
-	 * for this Attribute, this would be returned.
-	 *
-	 * Otherwise we would try to format the label from the
-	 * Attribute name.
+	 * By default attribute label is resolved using the
+	 * `MessageResolver`.
 	 *
 	 * @property attributeLabel
 	 * @type {String}
 	 */
 	attributeLabel: Ember.computed('attribute', function() {
-		var attribute = this.get('attribute');
+		const attribute = this.get('attribute');
 
-		if (Ember.isPresent(attribute.options.label)) {
-			return attribute.options.label;
-		}
-
-		return attribute.name.replace(/(?:^\w|[A-Z]|\b\w)/g, function(match, index) {
-			return index === 0 ? match.toUpperCase() : ' ' + match.toLowerCase();
-		}).replace(/_/g, ' ');
+		return this.messageResolver.resolveLabel(this, attribute);
 	}),
 
 	/**
@@ -101,12 +92,12 @@ export default Ember.Object.extend({
 	 * @return {String}
 	 */
 	format: function() {
-		var message = this.get('message'),
-			label = this.get('attributeLabel');
+		const message = this.get('message');
+		const label = this.get('attributeLabel');
 
 		Ember.assert('Message must be defined for this Validator', Ember.isPresent(message));
 
-		var args = Array.prototype.slice.call(arguments);
+		const args = Array.prototype.slice.call(arguments);
 
 		args.unshift(label);
 		args.unshift(message);

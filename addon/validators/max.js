@@ -24,8 +24,8 @@ export default Validator.extend({
 	max: null,
 
 	validate: function(name, value, attribute) {
-		var type = attribute.type,
-			maxValue = this.get('max');
+		const type = attribute.type;
+		const maxValue = this.get('max');
 
 		Ember.assert('You must define a `max` for MaxValidator', Ember.isPresent(maxValue));
 
@@ -33,9 +33,8 @@ export default Validator.extend({
 			return;
 		}
 
-		var validatorName = 'validate' + Ember.String.classify(type);
-
-		var invalid = true;
+		const validatorName = 'validate' + Ember.String.classify(type);
+		let invalid = true;
 
 		if(Ember.canInvoke(this, validatorName)) {
 			invalid = Ember.run(this, validatorName, value, maxValue);
@@ -51,7 +50,7 @@ export default Validator.extend({
 			return true;
 		}
 
-		var length = value && value.length || 0;
+		const length = value && value.length || 0;
 
 		return length > max;
 	},

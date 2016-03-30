@@ -20,14 +20,13 @@ export default Validator.extend({
 	min: null,
 
 	validate: function(name, value, attribute) {
-		var type = attribute.type,
-			minValue = this.get('min');
+		const type = attribute.type;
+		const minValue = this.get('min');
 
 		Ember.assert('You must define a `min` for MinValidator', Ember.isPresent(minValue));
 
-		var validatorName = 'validate' + Ember.String.classify(type);
-
-		var invalid = true;
+		const validatorName = 'validate' + Ember.String.classify(type);
+		let invalid = true;
 
 		if(Ember.canInvoke(this, validatorName)) {
 			invalid = Ember.run(this, validatorName, value, minValue);

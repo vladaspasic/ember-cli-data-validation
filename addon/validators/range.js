@@ -32,16 +32,15 @@ export default Validator.extend({
 	to: null,
 
 	validate: function(name, value, attribute) {
-		var type = attribute.type,
-			fromValue = this.get('from'),
-			toValue = this.get('to');
+		const type = attribute.type;
+		const fromValue = this.get('from');
+		const toValue = this.get('to');
 
 		Ember.assert('You must define a `from` for RangeValidator', Ember.isPresent(fromValue));
 		Ember.assert('You must define a `to` for RangeValidator', Ember.isPresent(toValue));
 
-		var validatorName = 'validate' + Ember.String.classify(type);
-
-		var invalid = true;
+		const validatorName = 'validate' + Ember.String.classify(type);
+		let invalid = true;
 
 		if(Ember.canInvoke(this, validatorName)) {
 			invalid = Ember.run(this, validatorName, value, fromValue, toValue);
@@ -57,7 +56,7 @@ export default Validator.extend({
 			return true;
 		}
 
-		var length = value && value.length || 0;
+		const length = value && value.length || 0;
 
 		return length < fromValue || length > toValue;
 	},

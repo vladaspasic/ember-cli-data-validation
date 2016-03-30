@@ -53,17 +53,17 @@ export default Ember.Object.extend({
 	 * @return {String}
 	 */
 	resolve: function(validator, attribute) {
-		var parsedName = this.parseName(validator, attribute);
-		var lookupKeys = ['modelPath', 'validatorPath', 'validatorType'];
+		const parsedName = this.parseName(validator, attribute);
+		const lookupKeys = ['modelPath', 'validatorPath', 'validatorType'];
 
-		var message;
+		let message;
 
-		lookupKeys.forEach(function(key) {
+		lookupKeys.forEach((key) => {
 			if (Ember.isPresent(message)) {
 				return;
 			}
 
-			var name = parsedName[key];
+			const name = parsedName[key];
 
 			Ember.assert(key + ' must be a string, you passed `' + typeof name + '`', typeof name === 'string');
 
@@ -72,7 +72,7 @@ export default Ember.Object.extend({
 			if(!message) {
 				message = this._cache[name] = this.resolveMessage(name);
 			}
-		}, this);
+		});
 
 		Ember.assert('Could not resolve message for `' + parsedName.validatorType +
 			'` Validator and  `' + parsedName.attributeType + '` ', Ember.isPresent(message));
@@ -95,6 +95,32 @@ export default Ember.Object.extend({
 	},
 
 	/**
+	 * Resolves the Attribute Label message.
+	 *
+	 * Returns a label format of the attribute name
+	 * to make it more readable for the user.
+	 *
+	 * If a `label` property is available in the Attribute description,
+	 * for this Attribute, this would be returned.
+	 *
+	 * Otherwise we would try to format the label from the
+	 * Attribute name.
+	 * 
+	 * @param  {Validator} validator
+	 * @param  {Attribute} attribute
+	 * @return {String}
+	 */
+	resolveLabel: function(validator, attribute) {
+		if (Ember.isPresent(attribute.options.label)) {
+			return attribute.options.label;
+		}
+
+		return attribute.name.replace(/(?:^\w|[A-Z]|\b\w)/g, function(match, index) {
+			return index === 0 ? match.toUpperCase() : ' ' + match.toLowerCase();
+		}).replace(/_/g, ' ');
+	},
+
+	/**
 	 * Used to format the lookup paramters.
 	 *
 	 * @method parseName
@@ -103,9 +129,9 @@ export default Ember.Object.extend({
 	 * @return {String}
 	 */
 	parseName: function(validator, attribute) {
-		var attributeType = this._parseAttributeType(attribute),
-			modelType = this._parseModelType(attribute),
-			validatorType = this._parseValidatorType(validator);
+		const attributeType = this._parseAttributeType(attribute);
+		const modelType = this._parseModelType(attribute);
+		const validatorType = this._parseValidatorType(validator);
 
 		return {
 			attributeType,
