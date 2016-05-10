@@ -1,14 +1,7 @@
 import Ember from 'ember';
 import ValidationError from '../error';
 import defaultMessages from '../messages';
-
-function getOwner(obj) {
-	if(Ember.canInvoke(Ember, 'getOwner')) {
-		return Ember.getOwner(obj);
-	} else {
-		return obj.container;
-	}
-}
+import getOwner from 'ember-getowner-polyfill';
 
 function createValidationError(model) {
 	const messageResolver = lookupMessageResolver(getOwner(model));
@@ -81,7 +74,7 @@ export default Ember.Mixin.create({
 	 * @param  {Attribute}  attribute
 	 * @return {Validator}
 	 */
-	validatorsFor: function(attribute) {
+	validatorsFor(attribute) {
 		const meta = attribute.options;
 		let validations = Ember.get(meta, 'validation');
 
@@ -125,7 +118,7 @@ export default Ember.Mixin.create({
 	 * @param  {Attribute} attribute
 	 * @private
 	 */
-	_validateAttribute: function(attribute) {
+	_validateAttribute(attribute) {
 		const validators = this.validatorsFor(attribute);
 		const name = attribute.name;
 
@@ -160,16 +153,19 @@ export default Ember.Mixin.create({
 	 * @method validate
 	 * @return {Boolean}
 	 */
-	validate: function() {
+	validate() {
 		// Do not validate the records which are deleted
 		if (this.get('isDeleted')) {
 			return true;
 		}
 
-		// Move the Model into `inFlight` state
-		this.send('willCommit');
-
 		const errors = this.get('errors');
+
+		// Clear the errors from the model and set the model
+		// into an `uncommitted` state if the model is invalid
+		if (!this.get('isValid')) {
+			errors.trigger('becameValid');
+		}
 
 		this.eachAttribute((key, attribute) => {
 			Ember.run(this, '_validateAttribute', attribute);
@@ -177,16 +173,16 @@ export default Ember.Mixin.create({
 
 		const isValid = Ember.get(errors, 'isEmpty');
 
+		// Move the model into an 'invalid' state if the errors
+		// are not empty
 		if(!isValid) {
-		  // From Ember Data 2.3.* it is required to manually trigger
-		  // `bacameInvalid` event in order to change the model state.
 			errors.trigger('becameInvalid');
 		}
 
 		return isValid;
 	},
 
-	save: function() {
+	save() {
 		if (this.validate()) {
 			return this._super();
 		}
