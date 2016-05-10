@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-data-validation",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "The default blueprint for ember-cli addons.",
   "directories": {
     "doc": "doc",
@@ -27,6 +27,7 @@
     "ember-cli-ic-ajax": "0.1.1",
     "ember-cli-inject-live-reload": "^1.3.0",
     "ember-cli-qunit": "^1.0.1",
+    "ember-cli-release": "0.2.8",
     "ember-cli-uglify": "^1.2.0",
     "ember-cli-yuidoc": "^0.7.0",
     "ember-data": "1.0.0-beta.18",
